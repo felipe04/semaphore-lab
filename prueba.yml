@@ -1,35 +1,25 @@
 ---
-- name: Diagnostico Semaphore
+- name: Test sudo Semaphore
   hosts: ubuntu
-  become: true
   gather_facts: false
 
   tasks:
 
-    - name: Mostrar usuario efectivo
-      ansible.builtin.command:
-        cmd: id
-      register: identidad
-
-    - name: Mostrar identidad
-      ansible.builtin.debug:
-        var: identidad.stdout
-
-    - name: Mostrar usuario
+    - name: Usuario SSH
       ansible.builtin.command:
         cmd: whoami
-      register: usuario
+      register: user_ssh
 
-    - name: Mostrar usuario
+    - name: Mostrar usuario SSH
       ansible.builtin.debug:
-        var: usuario.stdout
+        msg: "SSH: {{ user_ssh.stdout }}"
 
-    - name: Probar sudo
+    - name: Usuario con sudo
       ansible.builtin.command:
-        cmd: id
+        cmd: whoami
       become: true
-      register: identidad_root
+      register: user_sudo
 
-    - name: Mostrar identidad sudo
+    - name: Mostrar usuario sudo
       ansible.builtin.debug:
-        var: identidad_root.stdout
+        msg: "SUDO: {{ user_sudo.stdout }}"
