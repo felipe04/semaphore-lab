@@ -1,0 +1,22 @@
+---
+- name: Gestionar servicio Middleware Demo
+  hosts: ubuntu
+  become: true
+  gather_facts: false
+
+  tasks:
+
+    - name: Ejecutar acción sobre el servicio
+      ansible.builtin.systemd:
+        name: middleware-demo
+        state: "{{ service_action }}"
+      when: service_action != "status"
+
+    - name: Consultar estado del servicio
+      ansible.builtin.systemd:
+        name: middleware-demo
+      register: service_status
+
+    - name: Mostrar estado
+      ansible.builtin.debug:
+        msg: "Servicio middleware-demo: {{ service_status.status.ActiveState }}"
