@@ -1,0 +1,15 @@
+---
+- name: Test Semaphore
+  hosts: ubuntu
+  gather_facts: yes
+
+  tasks:
+
+    - name: Mostrar hostname
+      command: hostname
+
+    - name: Mostrar usuario
+      command: whoami
+
+    - name: Mostrar sistema operativo
+      command: cat /etc/os-release
