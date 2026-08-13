@@ -14,12 +14,11 @@
       ansible.builtin.debug:
         msg: "SSH: {{ user_ssh.stdout }}"
 
-    - name: Usuario con sudo
+    - name: Ejecutar sudo explícitamente
       ansible.builtin.command:
-        cmd: whoami
-      become: true
-      register: user_sudo
+        cmd: sudo -n whoami
+      register: sudo_result
 
-    - name: Mostrar usuario sudo
+    - name: Mostrar resultado sudo
       ansible.builtin.debug:
-        msg: "SUDO: {{ user_sudo.stdout }}"
+        msg: "SUDO: {{ sudo_result.stdout }}"
