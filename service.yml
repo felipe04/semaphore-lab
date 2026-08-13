@@ -1,7 +1,6 @@
 ---
 - name: Gestionar servicio Middleware Demo
   hosts: ubuntu
-  become: true
   gather_facts: false
 
   tasks:
@@ -12,17 +11,17 @@
 
     - name: Iniciar servicio
       ansible.builtin.command:
-        cmd: systemctl start middleware-demo
+        cmd: sudo -n systemctl start middleware-demo
       when: service_action == "START"
 
     - name: Detener servicio
       ansible.builtin.command:
-        cmd: systemctl stop middleware-demo
+        cmd: sudo -n systemctl stop middleware-demo
       when: service_action == "STOP"
 
     - name: Reiniciar servicio
       ansible.builtin.command:
-        cmd: systemctl restart middleware-demo
+        cmd: sudo -n systemctl restart middleware-demo
       when: service_action == "RESTART"
 
     - name: Obtener estado
@@ -30,6 +29,7 @@
         cmd: systemctl is-active middleware-demo
       register: service_status
       changed_when: false
+      failed_when: false
 
     - name: Mostrar estado
       ansible.builtin.debug:
