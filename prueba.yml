@@ -6,21 +6,30 @@
 
   tasks:
 
-    - name: Ejecutar whoami
+    - name: Mostrar usuario efectivo
+      ansible.builtin.command:
+        cmd: id
+      register: identidad
+
+    - name: Mostrar identidad
+      ansible.builtin.debug:
+        var: identidad.stdout
+
+    - name: Mostrar usuario
       ansible.builtin.command:
         cmd: whoami
       register: usuario
 
     - name: Mostrar usuario
       ansible.builtin.debug:
-        msg: "Usuario efectivo: {{ usuario.stdout }}"
+        var: usuario.stdout
 
-    - name: Ejecutar systemctl is-active
+    - name: Probar sudo
       ansible.builtin.command:
-        cmd: systemctl is-active middleware-demo
-      register: estado
-      changed_when: false
+        cmd: id
+      become: true
+      register: identidad_root
 
-    - name: Mostrar estado
+    - name: Mostrar identidad sudo
       ansible.builtin.debug:
-        msg: "Estado: {{ estado.stdout }}"
+        var: identidad_root.stdout
