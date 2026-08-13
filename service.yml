@@ -6,17 +6,32 @@
 
   tasks:
 
-    - name: Ejecutar acción sobre el servicio
+    - name: Iniciar servicio
       ansible.builtin.systemd:
         name: middleware-demo
-        state: "{{ service_action }}"
-      when: service_action != "status"
+        state: started
+      when: service_action == "START"
 
-    - name: Consultar estado del servicio
+    - name: Detener servicio
+      ansible.builtin.systemd:
+        name: middleware-demo
+        state: stopped
+      when: service_action == "STOP"
+
+    - name: Reiniciar servicio
+      ansible.builtin.systemd:
+        name: middleware-demo
+        state: restarted
+      when: service_action == "RESTART"
+
+    - name: Obtener estado
       ansible.builtin.systemd:
         name: middleware-demo
       register: service_status
 
     - name: Mostrar estado
       ansible.builtin.debug:
-        msg: "Servicio middleware-demo: {{ service_status.status.ActiveState }}"
+        msg:
+          - "Servicio: middleware-demo"
+          - "Estado: {{ service_status.status.ActiveState }}"
+          - "Subestado: {{ service_status.status.SubState }}"
