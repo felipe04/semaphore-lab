@@ -1,0 +1,26 @@
+---
+- name: Diagnostico Semaphore
+  hosts: ubuntu
+  become: true
+  gather_facts: false
+
+  tasks:
+
+    - name: Ejecutar whoami
+      ansible.builtin.command:
+        cmd: whoami
+      register: usuario
+
+    - name: Mostrar usuario
+      ansible.builtin.debug:
+        msg: "Usuario efectivo: {{ usuario.stdout }}"
+
+    - name: Ejecutar systemctl is-active
+      ansible.builtin.command:
+        cmd: systemctl is-active middleware-demo
+      register: estado
+      changed_when: false
+
+    - name: Mostrar estado
+      ansible.builtin.debug:
+        msg: "Estado: {{ estado.stdout }}"
