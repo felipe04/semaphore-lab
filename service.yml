@@ -1,26 +1,38 @@
 ---
-- name: Diagnostico Semaphore
+- name: Gestionar servicio Middleware Demo
   hosts: ubuntu
-  become: true
   gather_facts: false
 
   tasks:
 
-    - name: Identidad
-      ansible.builtin.command:
-        cmd: whoami
-      register: usuario
-
-    - name: Mostrar usuario
+    - name: Mostrar acción solicitada
       ansible.builtin.debug:
-        var: usuario.stdout
+        msg: "Acción solicitada: {{ service_action }}"
 
-    - name: Ejecutar systemctl status
+    - name: Iniciar servicio
       ansible.builtin.command:
-        cmd: systemctl status middleware-demo --no-pager
-      register: estado
+        cmd: systemctl start middleware-demo
+      become: true
+      when: service_action == "START"
+
+    - name: Detener servicio
+      ansible.builtin.command:
+        cmd: systemctl stop middleware-demo
+      become: true
+      when: service_action == "STOP"
+
+    - name: Reiniciar servicio
+      ansible.builtin.command:
+        cmd: systemctl restart middleware-demo
+      become: true
+      when: service_action == "RESTART"
+
+    - name: Obtener estado
+      ansible.builtin.command:
+        cmd: systemctl is-active middleware-demo
+      register: service_status
       changed_when: false
 
     - name: Mostrar estado
       ansible.builtin.debug:
-        var: estado.stdout_lines
+        msg: "Servicio middleware-demo: {{ service_status.stdout }}"
